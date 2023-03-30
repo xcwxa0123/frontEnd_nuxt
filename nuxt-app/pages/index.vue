@@ -34,9 +34,7 @@
 export default {
     methods: {
         async getPageDetail(pageHref: string){
-            const result = await $fetch('/api/getPageDetail', { method: 'POST', body: { pageHref } })
             this.$router.push(`${pageHref}`)
-            console.log('result====>', result)
         }
     }
 }
