@@ -26,7 +26,8 @@
     const epiList = ref()
     onMounted(async () => {
         const result = await $fetch('/api/getPageDetail', { method: 'POST', body: { pageHref: `/works/${route.params.bookId}` } })
-        epiList.value = result.data.episode_data
+        console.log('res=====>', result)
+        epiList.value = result.data.data.episode_data
     })
 </script>
 <script lang="ts">

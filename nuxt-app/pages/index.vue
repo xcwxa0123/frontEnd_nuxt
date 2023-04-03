@@ -27,6 +27,7 @@
     const titleList = ref()
     onMounted(async () => {
         const result = await $fetch('/api/getTitleList', { method: 'POST' })
+        // console.log('res====>', result)
         titleList.value = result.data
     })
 </script>
