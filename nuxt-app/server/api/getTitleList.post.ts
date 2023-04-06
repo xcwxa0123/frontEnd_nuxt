@@ -1,5 +1,5 @@
 export default defineEventHandler(async event => {
-    const result = await $fetch('http://192.168.163.143:8000/books/list')
+    const result = await $fetch('http://13.48.28.43:8000/books/list')
     // const result = [
     //     {
     //         "book_title": "【書籍2巻今夏発売】週に一度クラスメイトを買う話",
