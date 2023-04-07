@@ -1,7 +1,7 @@
 export default defineEventHandler(async event => {
     const dataBody = await readBody(event)
     console.log('body=====>', dataBody)
-    const result = await $fetch(`http://192.168.163.143:8000/books/detail?pageHref=${dataBody.pageHref}`, { method: 'GET' })
+    const result = await $fetch(`http://13.48.28.43:8000/implapi/books/detail?pageHref=${dataBody.pageHref}`, { method: 'GET' })
     return {
         code: 200,
         msg: 'success',
