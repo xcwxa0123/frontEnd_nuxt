@@ -27,8 +27,9 @@
     const titleList = ref()
     onMounted(async () => {
         const result = await $fetch('/api/getTitleList', { method: 'POST' })
-        // console.log('res====>', result)
-        titleList.value = result.data
+        if(result && result.code === 200 && result.data){
+            titleList.value = result.data
+        }
     })
 </script>
 <script lang="ts">
