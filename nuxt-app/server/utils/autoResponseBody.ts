@@ -1,15 +1,15 @@
 class AutoResponseBodyClass {
-    protected data: {[key: string]: string | Array<any>};
+    protected data: any;
     protected code: number;
     protected msg: string;
-    constructor({ data, code, msg }: { data: object, code: number, msg: string }) {
+    constructor({ data, code, msg }: { data: any, code: number, msg: string }) {
         const { checkedData, checkedCode, checkedMsg } = AutoResponseBodyClass.checkResponse(data, code, msg)
         this.data = checkedData;
         this.code = checkedCode;
         this.msg = checkedMsg;
     }
 
-    protected static checkResponse(data: object, code: number, msg: string){
+    protected static checkResponse(data: any, code: number, msg: string){
         switch (code) {
             case 200:
                 return { checkedData: data, checkedCode: code, checkedMsg: msg }
@@ -24,6 +24,6 @@ class AutoResponseBodyClass {
         return { data: this.data, code: this.code, msg: this.msg }
     }
 }
-export default ({ data, code, msg }: { data: object, code: number, msg: string }) => {
+export default ({ data, code, msg }: { data: any, code: number, msg: string }) => {
     return new AutoResponseBodyClass({ data, code, msg }).getReponseBody()
 }

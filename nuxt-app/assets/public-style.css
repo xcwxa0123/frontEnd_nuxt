@@ -1,0 +1,12 @@
+
+:root{
+    --bg-ao: rgba(246, 253, 255, 0.72);
+    --bg-haiao: rgba(141, 215, 226, 0.17);
+    --bg-shiro: rgba(255, 255, 255, 0.9);
+}
+.m07{ margin: .7rem; }
+.mt1{ margin-top: 3rem; }
+.v80{ height: 80vh; }
+* {
+    font: "Rounded Mplus 1c";
+}
