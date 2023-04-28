@@ -25,7 +25,7 @@
     const route = useRoute()
     const epiList = ref()
     onMounted(async () => {
-        const result = await $fetch('/api/getPageDetail', { method: 'POST', body: { pageHref: `/works/${route.params.bookId}` } })
+        const result = await $fetch('/api/getPageDetail', { method: 'POST', body: { pageHref: route.params.bookId } })
         if(result && result.code === 200 && result.data && result.data.episode_data){
             epiList.value = result.data.episode_data
         }
