@@ -13,7 +13,7 @@
             <template v-for="item in titleList">
                 <Card class="list_card" @click="getPageDetail(item.book_id)">
                     <template #title>{{ item.book_title }}</template>
-                    <template #subtitle>{{ item.author_id.author_name }}</template>
+                    <template #subtitle>{{ item.author.author_name }}</template>
                     <template #content>
                         <p>{{ item.book_desc }}</p>
                     </template>
@@ -27,7 +27,9 @@
 
 </template>
 <script setup lang="ts">
-    const titleList = ref()
+    type book = Record<string, any>
+    // {[key: string]: any}
+    const titleList = ref<book[]>()
     titleList.value = []
     onMounted(async () => {
         const result = await $fetch('/api/getTitleList', { method: 'POST' })
@@ -41,23 +43,12 @@
 export default {
     methods: {
         async getPageDetail(book_id: string){
-            // this.$router.push(`${pageHref}`)
-            console.log('getPageDetail=========>', book_id);
+            this.$router.push(`works/${book_id}`)
         }
     }
 }
 </script>
 <style>
-    /* body {
-        font-family: var(--font-family);
-        color: var(--text-color);
-        background-color: var(--surface-ground);
-        margin: 0;
-        padding: 0;
-        min-height: 100%;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    } */
     body{
         background: var(--bg-ao);
         font: "Rounded Mplus 1c";

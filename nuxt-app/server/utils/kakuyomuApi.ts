@@ -12,7 +12,7 @@ class KakuyomuApiClass{
 
     // 获取列表
     public async getEpisodeList(book_id: string): Promise<any>{
-        return await $fetch(`${process.env.API_BASE_URL}/implapi/episode/viewlist/?book_id=${book_id}`, { method: 'GET' })
+        return await $fetch(`${process.env.API_BASE_URL}/implapi/episode/viewlist/?book=${book_id}`, { method: 'GET' })
     }
 }
 export default () => {
