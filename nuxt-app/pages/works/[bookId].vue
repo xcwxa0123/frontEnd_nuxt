@@ -1,69 +1,73 @@
 <template>
-    <Toolbar class="back-card">
-        <template #start>
-            <!-- START -->
-            <!-- search() -->
-        </template>
-        <template #end>
-            <!-- END -->
-        </template>
-    </Toolbar>
+    <TopBanner></TopBanner>
     <div class="opacity-div">
-        <Card class="back-card left">
-            <template #content>
-                <div class="icon-box">
-                    <div class="icon-bg"><i class="pi pi-bars"></i></div>
-                    <div class="icon-bg"><i class="pi pi-sync"></i></div>
+        <Card class="back-card right">
+            <template #title>{{ bookFullData?.book_title }}</template>
+            <template #subtitle>
+                <div class="subtitle-box">
+                    <span>{{ bookFullData?.author.author_name }}</span>
+                    <span>{{ bookFullData?.publish_state == 1 ? '連載中': '完結済' }}&nbsp;&nbsp;&nbsp;&nbsp;{{ bookFullData?.number_of_episode }}</span>
+                    <span>{{ bookFullData?.last_time }}</span>
                 </div>
             </template>
-        </Card>
-        <Card class="back-card right">
             <template #content>
                 <template v-for="item in episodeFullData">
-                    <!-- <Card class="list_card" @click="getPageDetail(item.book_id)"> -->
-                    <Card class="main_card">
+                    <Card class="main-card">
                         <template #title>{{ item && item.main_title }}</template>
-                        <!-- <template #title>{{ item.book_title }}</template> -->
-                        <!-- <template #subtitle>{{ item.author.author_name }}</template> -->
                         <template #content>
                             <template v-for="episodeItem in item.episodeDetail">
-                                <Card class="sub-card">
+                                <Card class="sub-card anime-div">
                                     <template #content>
-                                        <p>{{ episodeItem && episodeItem.sub_title }}</p>
-                                    </template>
-                                    <template #footer>
-                                        2023/4/27 183话
+                                        <div class="text-content">
+                                            <span>{{ episodeItem && episodeItem.sub_title }}</span>
+                                            <span>{{ episodeItem && episodeItem.refresh_time }}</span>
+                                        </div>
                                     </template>
                                 </Card>
                             </template>
-                        </template>
-                        <template #footer>
-                            2023/4/27 183话
                         </template>
                     </Card>
                 </template>
             </template>
         </Card>
     </div>
+        
+    <Card class="back-card text-card">
+        <!-- <template #title>{{ bookFullData?.book_title }}</template>
+        <template #subtitle>
+            <span>{{ bookFullData?.author.author_name }}</span>
+        </template> -->
+        <template #content>
+            <Card class="main-card">
+                <template #content>
+                    <Card>
+                        <template #content>
+                            <!-- <div class="text-div">{{ bookFullData?.full_desc }}</div> -->
+                            <Fieldset legend="詳細">
+                                <p class="text-div">
+                                    {{ bookFullData?.full_desc }}
+                                </p>
+                            </Fieldset>
+                        </template>
+                    </Card>
+                </template>
+            </Card>
+        </template>
+    </Card>
 </template>
 <script setup lang="ts">
     const route = useRoute()
-    interface EpisodeDetail {
-        episode_id: string,
-        refresh_time: string,
-        sub_title: string
-    }
-    interface EpisodeObj {
-        main_title: string,
-        book_id: string,
-        episodeDetail: Array<EpisodeDetail>
-    }
+    interface EpisodeDetail { episode_id: string, refresh_time: string, sub_title: string }
+    interface EpisodeObj { main_title: string, book_id: string, episodeDetail: Array<EpisodeDetail> }
+    interface Author { author_id: string, author_name: string }
+    interface Book { author: Author, book_desc?: string, book_id?: string, book_title: string, full_desc?: string, hot_rank?: number, last_time?: string, number_of_episode?: string, publish_state?: number }
     const episodeFullData = ref<Array<EpisodeObj>>()
-    episodeFullData.value = []
+    const bookFullData = ref<Book>()
     onMounted(async () => {
         const result = await $fetch('/api/getPageDetail', { method: 'POST', body: { bookId: route.params.bookId } })
         if(result && result.code === 200 && result.data && result.data.episodeResult){
             const episodeData: Array<{ [key: string]: string }> = result.data.episodeResult
+            bookFullData.value = result.data.bookResult
             let currentMainTitle: string = ''
             let currentEpisodeObj: EpisodeObj
             const episodeList: Array<EpisodeObj> = []
@@ -115,115 +119,60 @@ export default {
 }
 </script>
 <style>
-body{
-    background: var(--bg-ao);
-    font: "Rounded Mplus 1c";
-}
-.back-card{
-    background-color: var(--bg-haiao);
-    box-shadow: 0.3125rem -0.1875rem 0.1875rem 0.0625rem rgba(0, 0, 0, 0.2), 
-                -0.00625rem 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.14), 
-                0 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.12);
-    margin: 1.25rem 3.75rem 1.25rem 3.75rem;
-}
-.p-card *{
-    text-align: center;
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+/Edge */
-    user-select: none;
-}
-.p-card .p-card-footer {
-    padding: 0;
-    margin: 1rem 0;
-    text-align: end;
-    position: relative;
-    right: 1rem;
-}
-/* .back-card .p-card:hover{
-    cursor: pointer;
-    position: relative;
-    left: 0.3125rem;
-    bottom: -0.1875rem;
-    box-shadow: 0.3125rem -0.1875rem 0.1875rem 0.0625rem rgb(0, 44, 54, 0.5), 
-                -0.00625rem 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.14), 
-                0 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.12);
-    background-color: rgba(178, 221, 231, 0.7);
-} */
-/* .back-card .p-card:active{
-    cursor: pointer;
-    position: relative;
-    left: 0.625rem;
-    bottom: 0rem;
-    box-shadow: none;
-    background-color: rgba(255, 255, 255, 0.7);
-    transition: background-color 0.2s, box-shadow 0.2s;
-    animation-timing-function: linear;
-} */
-.p-card .p-card-content{
-    padding: 0;
-    font-weight: 500;
-    font-size: 1.1rem;
-}
-.p-card .p-card-subtitle{
-    font-weight: 900;
-}
-.p-card .p-card-title{
-    font-size: 1.4rem;
-}
-.p-card-content p {
-    padding-left: 1rem;
-    text-align: left;
-}
-.p-card .p-card-body { padding-bottom: 0.5rem; }
-.p-card-content .main_card{
-    background-color: rgba(178, 221, 231, 0.7);
-    box-shadow: 0.3125rem -0.1875rem 0.1875rem 0.0625rem rgba(0, 0, 0, 0.2), 
-                -0.00625rem 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.14), 
-                0 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.12);
-    margin: 1.25rem 3.75rem 1.25rem 3.75rem;
-    flex: 1;
-}
-.opacity-div{
-    display: flex;
-}
-.back-div{
-    background-color: var(--bg-haiao);
-    margin: 1.25rem 1rem 1.25rem 3.75rem;
-    flex: 1;
-    display: block;
-    margin-right: 1rem;
-}
-.left{
-    flex: 1;
-    display: block;
-    margin-right: 1rem;
-}
-.left .p-card-body {
-    padding: 0.5rem;
-}
 .right{
-    flex: 29;
+    flex: 1;
     display: block;
-    margin-left: 0;
-    width: 90vh;
 }
-.icon-box{
-    position: fixed;
+.right .p-card .p-card-title{
+    font-size: 1.3rem;
+    font-weight: 500;
 }
-.icon-bg{
+.p-card-content .main-card{
     background-color: rgba(178, 221, 231, 0.7);
-    box-shadow: 0rem 0rem 0.1875rem 0.1875rem rgba(0, 0, 0, 0.12), 
-                0rem 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.1), 
+    box-shadow: 0.3125rem -0.1875rem 0.1875rem 0.0625rem rgba(0, 0, 0, 0.2), 
+                -0.00625rem 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.14), 
                 0 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.12);
-    padding: 0.5rem 0.8rem;
-    margin: 1rem 0;
-    border-radius: 0.375rem;
+    margin: 1.25rem 3.75rem 1.25rem 3.75rem;
 }
 .sub-card{
-    /* background-color: var(--shiro); */
+    margin-bottom: 0.5rem;
+}
+.sub-card .p-card-body{
+    padding: 0;
 }
 .sub-card .p-card .p-card-footer{
     margin: 0;
+}
+.text-content{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+.text-content span:first-child{
+    grid-column: 2/5;
+}
+.text-content span:last-child{
+    grid-column: 5;
+    font-size: 0.8rem;
+    justify-self: flex-end;
+    margin-right: 0.8rem;
+    align-self: flex-end;
+}
+.text-card{
+    display: block;
+    position: fixed;
+    top: 0.5rem;
+    left: 5rem;
+    width: 30%;
+}
+.text-card .p-card-content .main-card{
+    margin: 0;
+}
+.text-div{
+    text-align: start;
+    white-space: pre-line;
+    /* text-indent: 1rem; */
+}
+.main-card .p-fieldset .p-fieldset-legend{
+    text-align: start;
 }
 </style>

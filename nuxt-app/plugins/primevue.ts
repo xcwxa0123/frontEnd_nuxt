@@ -8,9 +8,12 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';   // optional
 import Row from 'primevue/row';                   // optional
 import Card from 'primevue/card';
+import Tooltip from 'primevue/tooltip';
+import Fieldset from 'primevue/fieldset';
 
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, { ripple: true });
-    [Card, DataTable, Column, ColumnGroup, Row, Toolbar, Button, SplitButton].forEach(item => nuxtApp.vueApp.component(item.name, item))
+    nuxtApp.vueApp.directive('tooltip', Tooltip);
+    [Card, DataTable, Column, ColumnGroup, Row, Toolbar, Button, SplitButton, Fieldset].forEach(item => nuxtApp.vueApp.component(item.name, item))
     //other components that you need
 });
