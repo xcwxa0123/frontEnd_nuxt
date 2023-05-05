@@ -28,6 +28,10 @@
     interface Book { author: Author, book_desc?: string, book_id: string, book_title?: string, full_desc?: string, hot_rank?: number, last_time?: string, number_of_episode?: string, publish_state?: number }
     // {[key: string]: any}
     const titleList = ref<Array<Book>>()
+    const router = useRouter()
+    const getPageDetail = async (book_id: string) => {
+        router.push(`works/${book_id}`)
+    }
     onMounted(async () => {
         const result = await $fetch('/api/getTitleList', { method: 'POST' })
         console.log('result======>', result.data)
@@ -35,15 +39,6 @@
             titleList.value = result.data
         }
     })
-</script>
-<script lang="ts">
-export default {
-    methods: {
-        async getPageDetail(book_id: string){
-            this.$router.push(`works/${book_id}`)
-        }
-    }
-}
 </script>
 <style>
     .list-card{

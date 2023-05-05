@@ -10,10 +10,11 @@ import Row from 'primevue/row';                   // optional
 import Card from 'primevue/card';
 import Tooltip from 'primevue/tooltip';
 import Fieldset from 'primevue/fieldset';
+import ScrollPanel from 'primevue/scrollpanel';
 
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, { ripple: true });
     nuxtApp.vueApp.directive('tooltip', Tooltip);
-    [Card, DataTable, Column, ColumnGroup, Row, Toolbar, Button, SplitButton, Fieldset].forEach(item => nuxtApp.vueApp.component(item.name, item))
+    [Card, DataTable, Column, ColumnGroup, Row, Toolbar, Button, SplitButton, Fieldset, ScrollPanel].forEach(item => nuxtApp.vueApp.component(item.name, item))
     //other components that you need
 });

@@ -1,5 +1,5 @@
 <template>
-    <TopBanner></TopBanner>
+    <TopBanner @showDetail="showDetail"></TopBanner>
     <div class="opacity-div">
         <Card class="back-card right">
             <template #title>{{ bookFullData?.book_title }}</template>
@@ -33,21 +33,16 @@
     </div>
         
     <Card class="back-card text-card">
-        <!-- <template #title>{{ bookFullData?.book_title }}</template>
-        <template #subtitle>
-            <span>{{ bookFullData?.author.author_name }}</span>
-        </template> -->
         <template #content>
             <Card class="main-card">
                 <template #content>
                     <Card>
                         <template #content>
-                            <!-- <div class="text-div">{{ bookFullData?.full_desc }}</div> -->
-                            <Fieldset legend="詳細">
+                            <ScrollPanel class="text-panel">
                                 <p class="text-div">
                                     {{ bookFullData?.full_desc }}
                                 </p>
-                            </Fieldset>
+                            </ScrollPanel>
                         </template>
                     </Card>
                 </template>
@@ -57,12 +52,20 @@
 </template>
 <script setup lang="ts">
     const route = useRoute()
+    const showDetailFlag = ref(false)
     interface EpisodeDetail { episode_id: string, refresh_time: string, sub_title: string }
     interface EpisodeObj { main_title: string, book_id: string, episodeDetail: Array<EpisodeDetail> }
     interface Author { author_id: string, author_name: string }
     interface Book { author: Author, book_desc?: string, book_id?: string, book_title: string, full_desc?: string, hot_rank?: number, last_time?: string, number_of_episode?: string, publish_state?: number }
     const episodeFullData = ref<Array<EpisodeObj>>()
     const bookFullData = ref<Book>()
+    const showDetail = () => {
+        console.log('调到了=========')
+        showDetailFlag.value = !showDetailFlag.value
+        const target: HTMLElement = document.querySelector('.text-card')!
+        target.style.opacity = showDetailFlag.value ? '1' : '0'
+        target.style.zIndex = showDetailFlag.value ? '1' : '-1'
+    }
     onMounted(async () => {
         const result = await $fetch('/api/getPageDetail', { method: 'POST', body: { bookId: route.params.bookId } })
         if(result && result.code === 200 && result.data && result.data.episodeResult){
@@ -107,17 +110,11 @@
         }
     })
 </script>
-<script lang="ts">
+<!-- <script lang="ts">
 export default {
-    data() {
-        return {
-            // epiList: [] 
-        }
-    },
-    methods: {
-    }
+    methods: { showDetail }
 }
-</script>
+</script> -->
 <style>
 .right{
     flex: 1;
@@ -160,19 +157,30 @@ export default {
 .text-card{
     display: block;
     position: fixed;
-    top: 0.5rem;
+    top: 4rem;
     left: 5rem;
     width: 30%;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease, z-index 0.3s ease;
 }
 .text-card .p-card-content .main-card{
     margin: 0;
 }
 .text-div{
     text-align: start;
+    padding-right: 1rem;
     white-space: pre-line;
     /* text-indent: 1rem; */
 }
 .main-card .p-fieldset .p-fieldset-legend{
     text-align: start;
+}
+/* .text-card #pv_id_7_content{
+    height: 50vh;
+    overflow-y: scroll;
+} */
+.text-panel{
+    height: 50vh
 }
 </style>
