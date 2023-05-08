@@ -1,5 +1,5 @@
 <template>
-    <TopBanner @showDetail="showDetail"></TopBanner>
+    <TopBanner @showDetail="showDetail" :searchBtn="true" :detailBtn="true" :refreshBtn="true" :multipleCheckBtn="true"></TopBanner>
     <div class="opacity-div">
         <Card class="back-card right">
             <template #title>{{ bookFullData?.book_title }}</template>
@@ -16,7 +16,7 @@
                         <template #title>{{ item && item.main_title }}</template>
                         <template #content>
                             <template v-for="episodeItem in item.episodeDetail">
-                                <Card class="sub-card anime-div">
+                                <Card class="sub-card anime-div" @click="toEpisodeText(item.book_id, episodeItem.episode_id)">
                                     <template #content>
                                         <div class="text-content">
                                             <span>{{ episodeItem && episodeItem.sub_title }}</span>
@@ -51,12 +51,10 @@
     </Card>
 </template>
 <script setup lang="ts">
+    import { Book, EpisodeObj } from '~~/composables/interfaceSet'
     const route = useRoute()
+    const router = useRouter()
     const showDetailFlag = ref(false)
-    interface EpisodeDetail { episode_id: string, refresh_time: string, sub_title: string }
-    interface EpisodeObj { main_title: string, book_id: string, episodeDetail: Array<EpisodeDetail> }
-    interface Author { author_id: string, author_name: string }
-    interface Book { author: Author, book_desc?: string, book_id?: string, book_title: string, full_desc?: string, hot_rank?: number, last_time?: string, number_of_episode?: string, publish_state?: number }
     const episodeFullData = ref<Array<EpisodeObj>>()
     const bookFullData = ref<Book>()
     const showDetail = () => {
@@ -65,6 +63,9 @@
         const target: HTMLElement = document.querySelector('.text-card')!
         target.style.opacity = showDetailFlag.value ? '1' : '0'
         target.style.zIndex = showDetailFlag.value ? '1' : '-1'
+    }
+    const toEpisodeText = (book_id: string, episode_id: string) => {
+        router.push(`/works/${book_id}/episodes/${episode_id}`)
     }
     onMounted(async () => {
         const result = await $fetch('/api/getPageDetail', { method: 'POST', body: { bookId: route.params.bookId } })

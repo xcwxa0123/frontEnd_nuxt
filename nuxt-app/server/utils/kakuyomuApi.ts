@@ -1,18 +1,28 @@
 // type kakuyomuApiText = keyof KakuyomuApiClass
 class KakuyomuApiClass{
-    // 获取列表
+    // 获取book列表
     public async getTitleList(): Promise<any>{
         return await $fetch(`${process.env.API_BASE_URL}/implapi/books/list`, { method: 'GET' })
     }
 
-    // 获取列表
+    // 获取book详情
     public async getBookDetail(book_id: string): Promise<any>{
         return await $fetch(`${process.env.API_BASE_URL}/implapi/books/list/${book_id}`, { method: 'GET' })
     }
 
-    // 获取列表
+    // 获取episode列表
     public async getEpisodeList(book_id: string): Promise<any>{
         return await $fetch(`${process.env.API_BASE_URL}/implapi/episode/viewlist/?book=${book_id}`, { method: 'GET' })
+    }
+
+    // 获取episode文本
+    public async getEpisodeText(book_id: string, episode_id: string): Promise<any>{
+        return await $fetch(`${process.env.API_BASE_URL}/implapi/episode/text?bookId=${book_id}&episodeId=${episode_id}`, { method: 'GET' })
+    }
+    // 获取episode文件
+    public async getEpisodeFile(book_id: string, episode_id: string): Promise<any>{
+        return await $fetch(`${process.env.API_BASE_URL}/implapi/episode/getFile?bookId=${book_id}&episodeId=${episode_id}`, { method: 'GET', responseType: 'blob' })
+        // return `${process.env.API_BASE_URL}/implapi/episode/getFile?bookId=${book_id}&episodeId=${episode_id}`
     }
 }
 export default () => {

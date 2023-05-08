@@ -1,5 +1,5 @@
 <template>
-    <TopBanner></TopBanner>
+    <TopBanner :searchBtn="true"></TopBanner>
     <div class="opacity-div">
         <Card class="back-card">
             <template #content>
@@ -24,8 +24,7 @@
 
 </template>
 <script setup lang="ts">
-    interface Author { author_id?: string, author_name: string }
-    interface Book { author: Author, book_desc?: string, book_id: string, book_title?: string, full_desc?: string, hot_rank?: number, last_time?: string, number_of_episode?: string, publish_state?: number }
+    import { Book } from '~~/composables/interfaceSet'
     // {[key: string]: any}
     const titleList = ref<Array<Book>>()
     const router = useRouter()

@@ -2,25 +2,45 @@
     <Toolbar class="back-card top">
         <template #start>
             <div class="icon-box">
-                <div class="icon-bg anime-div" v-tooltip="'search'"><i class="pi pi-search"></i></div>
-                <div class="icon-bg anime-div" v-tooltip="'detail'" @click="detailClick"><i class="pi pi-bars"></i></div>
-                <div class="icon-bg anime-div" v-tooltip="'refresh'"><i class="pi pi-sync"></i></div>
-                <div class="icon-bg anime-div" v-tooltip="'download'"><i class="pi pi-download"></i></div>
-                <div class="icon-bg anime-div" v-tooltip="'multiple check'"><i class="pi pi-check-circle"></i></div>
+                <div class="icon-bg anime-div" v-tooltip="'search'" v-if="props.searchBtn" @click="(event: MouseEvent)=>bannerClick(event, 'search')"><i class="pi pi-search"></i></div>
+                <div class="icon-bg anime-div" v-tooltip="'detail'" v-if="props.detailBtn" @click="(event: MouseEvent)=>bannerClick(event, 'detail')"><i class="pi pi-bars"></i></div>
+                <div class="icon-bg anime-div" v-tooltip="'refresh'" v-if="props.refreshBtn" @click="(event: MouseEvent)=>bannerClick(event, 'refresh')"><i class="pi pi-sync"></i></div>
+                <div class="icon-bg anime-div" v-tooltip="'download'" v-if="props.downloadBtn" @click="(event: MouseEvent)=>bannerClick(event, 'download')"><i class="pi pi-download"></i></div>
+                <div class="icon-bg anime-div" v-tooltip="'multipleCheck'" v-if="props.multipleCheckBtn" @click="(event: MouseEvent)=>bannerClick(event, 'multipleCheck')"><i class="pi pi-check-circle"></i></div>
             </div>
         </template>
     </Toolbar>
 </template>
 
 <script setup lang="ts">
-    interface myHTMLElement extends HTMLElement { isClicked: Boolean | null }
-    const that = getCurrentInstance()!;
-    const detailClick = (event: MouseEvent) => {
+    import { myHTMLElement } from '~~/composables/interfaceSet'
+    const props = defineProps({
+        searchBtn: { type: Boolean, default: false },
+        detailBtn: { type: Boolean, default: false },
+        refreshBtn: { type: Boolean, default: false },
+        downloadBtn: { type: Boolean, default: false },
+        multipleCheckBtn: { type: Boolean, default: false },
+    })
+    const emit = defineEmits({
+        showSearch: Function,
+        showDetail: Function,
+        refreshBook: Function,
+        episodeDownload: Function,
+        setMultipale: Function,
+        
+    })
+    const bannerClick = (event: MouseEvent, tag: string) => {
         const target: myHTMLElement = event.target as myHTMLElement
         if(target.tagName.toLowerCase() === 'i'){
             target.parentElement?.click()
         } else {
-            that.emit('showDetail')
+            switch (tag) {
+                case 'search': emit('showSearch'); break;
+                case 'detail': emit('showDetail'); break;
+                case 'refresh': emit('refreshBook'); break;
+                case 'download': emit('episodeDownload'); break;
+                case 'multipleCheck': emit('setMultipale'); break;
+            }
             // if(target.isClicked){
             //     cancelSpin(target)
             // } else {
