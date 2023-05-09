@@ -20,27 +20,22 @@
 <script setup lang="ts">
 import { EpisodeText } from '~~/composables/interfaceSet'
     // {[key: string]: any}
-    const episodeTextData = ref<EpisodeText>({})
+    const episodeTextData = ref<EpisodeText>({} as EpisodeText)
     const router = useRouter()
     const route = useRoute()
     const episodeDownload = async () => {
-        const result = await $fetch('/api/getEpisodeFile', { method: 'POST', body: { bookId: route.params._bookId, episodeId: route.params.episodeId } })
-        console.log('result======>', result)
-        // debugger
-        // const arrayBuffer = await result.arrayBuffer();
-        // // 将文件数据转换为 Blob 对象
-        // // const blob = result.blob();
-        // const blob = new Blob([arrayBuffer], { type: 'text/html' })
+        const result = await $fetch('/api/getEpisodeFile', { method: 'POST', body: { bookId: route.params._bookId, episodeId: route.params.episodeId }, responseType: 'blob' })
         // // 创建链接并下载文件
-        
-        // const blob = new Blob([result], {
-        //     type: 'text/html'
-        // });
-        // const link = document.createElement('a');
-        // link.href = result
-        // link.download = 'myfile.txt';
-        // document.body.appendChild(link);
-        // link.click();
+        if(result instanceof Blob){
+            const blob = new Blob([result], {
+                type: 'application/octet-stream'
+            });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob)
+            link.download = `${episodeTextData.value.file_name}.txt`;
+            document.body.appendChild(link);
+            link.click();
+        }
     }
     onMounted(async () => {
         const result = await $fetch('/api/getEpisodeText', { method: 'POST', body: { bookId: route.params._bookId, episodeId: route.params.episodeId } })

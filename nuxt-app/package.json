@@ -5,10 +5,14 @@
     "dev": "npx nuxi dev --dotenv .env.development",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "debug": "npx nuxi test",
+    "debug:server": "node --inspect-brk=0.0.0.0:9229 ./node_modules/.bin/nuxt start --dotenv .env.development"
   },
   "devDependencies": {
+    "@nuxt/test-utils-edge": "^3.5.0-28059470.ddbb8479",
     "@types/node": "^18.15.5",
+    "vitest": "^0.31.0",
     "nuxt": "^3.1.2"
   },
   "dependencies": {
