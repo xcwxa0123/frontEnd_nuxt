@@ -24,6 +24,11 @@ class KakuyomuApiClass{
         return await $fetch(`${process.env.API_BASE_URL}/implapi/episode/getFile?bookId=${book_id}&episodeId=${episode_id}`, { method: 'GET', responseType: 'blob' })
         // return `${process.env.API_BASE_URL}/implapi/episode/getFile?bookId=${book_id}&episodeId=${episode_id}`
     }
+    // 刷新book的episode列表
+    // 得整个POST接口
+    public async uploadEpisode(book_id: string): Promise<any>{
+        return await $fetch(`${process.env.API_BASE_URL}/implapi/episode/updateEpisode?bookId=${book_id}`, { method: 'GET' })
+    }
 }
 export default () => {
     return new KakuyomuApiClass()

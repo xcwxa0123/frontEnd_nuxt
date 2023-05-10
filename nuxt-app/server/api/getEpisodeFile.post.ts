@@ -9,8 +9,8 @@ export default defineEventHandler(async event => {
         // 文件流形式，不需要组装
 
     } catch (error) {
-        return autoResponseBody({ data: {}, code: 500, msg: String(error) })
         console.log('error============>', error)
+        return autoResponseBody({ data: {}, code: 500, msg: String(error) })
         // return new ArrayBuffer(0)
     }
 })

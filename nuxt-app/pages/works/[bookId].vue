@@ -1,5 +1,5 @@
 <template>
-    <TopBanner @showDetail="showDetail" :searchBtn="true" :detailBtn="true" :refreshBtn="true" :multipleCheckBtn="true"></TopBanner>
+    <TopBanner @showDetail="showDetail" @refreshBook="refreshBook" :searchBtn="true" :detailBtn="true" :refreshBtn="true" :multipleCheckBtn="true"></TopBanner>
     <div class="opacity-div">
         <Card class="back-card right">
             <template #title>{{ bookFullData?.book_title }}</template>
@@ -64,10 +64,18 @@
         target.style.opacity = showDetailFlag.value ? '1' : '0'
         target.style.zIndex = showDetailFlag.value ? '1' : '-1'
     }
+    const uploadEpisode = async () => {
+        await $fetch('/api/uploadEpisode', { method: 'POST', body: { bookId: route.params.bookId } })
+    }
     const toEpisodeText = (book_id: string, episode_id: string) => {
         router.push(`/works/${book_id}/episodes/${episode_id}`)
     }
-    onMounted(async () => {
+    const refreshBook = async () => {
+        // 这里不能用await，得promise
+        await uploadEpisode()
+        await getPageDetail()
+    }
+    const getPageDetail = async () => {
         const result = await $fetch('/api/getPageDetail', { method: 'POST', body: { bookId: route.params.bookId } })
         if(result && result.code === 200 && result.data && result.data.episodeResult){
             const episodeData: Array<{ [key: string]: string }> = result.data.episodeResult
@@ -109,6 +117,9 @@
             console.log('episodeList========>', episodeList)
             episodeFullData.value = episodeList
         }
+    }
+    onMounted(async () => {
+        getPageDetail()
     })
 </script>
 <!-- <script lang="ts">
