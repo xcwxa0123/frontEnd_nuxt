@@ -11,10 +11,33 @@ import Card from 'primevue/card';
 import Tooltip from 'primevue/tooltip';
 import Fieldset from 'primevue/fieldset';
 import ScrollPanel from 'primevue/scrollpanel';
+import ProgressSpinner from 'primevue/progressspinner';
+import Dialog from 'primevue/dialog';
+import Sidebar from 'primevue/sidebar';
+import InputText from 'primevue/inputtext';
+import Listbox from 'primevue/listbox';
+import MultiSelect from 'primevue/multiselect';
 
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, { ripple: true });
     nuxtApp.vueApp.directive('tooltip', Tooltip);
-    [Card, DataTable, Column, ColumnGroup, Row, Toolbar, Button, SplitButton, Fieldset, ScrollPanel].forEach(item => nuxtApp.vueApp.component(item.name, item))
+    [
+        Card,
+        DataTable,
+        Column,
+        ColumnGroup,
+        Row,
+        Toolbar,
+        Button,
+        SplitButton,
+        Fieldset,
+        ScrollPanel,
+        ProgressSpinner,
+        Dialog,
+        Sidebar,
+        InputText,
+        Listbox,
+        MultiSelect
+    ].forEach(item => nuxtApp.vueApp.component(item.name, item))
     //other components that you need
 });

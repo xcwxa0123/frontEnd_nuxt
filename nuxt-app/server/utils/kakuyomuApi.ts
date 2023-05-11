@@ -27,7 +27,7 @@ class KakuyomuApiClass{
     // 刷新book的episode列表
     // 得整个POST接口
     public async uploadEpisode(book_id: string): Promise<any>{
-        return await $fetch(`${process.env.API_BASE_URL}/implapi/episode/updateEpisode?bookId=${book_id}`, { method: 'GET' })
+        return await $fetch(`${process.env.API_BASE_URL}/implapi/episode/updateEpisode`, { method: 'POST', body: JSON.stringify({ bookId: book_id }) })
     }
 }
 export default () => {

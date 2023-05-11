@@ -1,5 +1,6 @@
 <template>
-    <TopBanner @showDetail="showDetail" @refreshBook="refreshBook" :searchBtn="true" :detailBtn="true" :refreshBtn="true" :multipleCheckBtn="true"></TopBanner>
+    <TopBanner @showDetail="showDetail" @refreshBook="refreshBook" @showSearch="showSearch" :searchBtn="true" :detailBtn="true" :refreshBtn="true" :multipleCheckBtn="true"></TopBanner>
+    <SearchBar :showSideBar="showSideBar" @getSearchList="getSearchList"></SearchBar>
     <div class="opacity-div">
         <Card class="back-card right">
             <template #title>{{ bookFullData?.book_title }}</template>
@@ -49,6 +50,9 @@
             </Card>
         </template>
     </Card>
+    <Dialog v-model:visible="loading" v-model:closable="closable" v-model:draggable="draggable" modal :style="{ width: '10rem' } ">
+        <ProgressSpinner />
+    </Dialog>
 </template>
 <script setup lang="ts">
     import { Book, EpisodeObj } from '~~/composables/interfaceSet'
@@ -57,12 +61,23 @@
     const showDetailFlag = ref(false)
     const episodeFullData = ref<Array<EpisodeObj>>()
     const bookFullData = ref<Book>()
+    const closable = ref(false)
+    const draggable = ref(false)
+    let showSideBar = ref(false)
+    let loading = ref(false)
     const showDetail = () => {
         console.log('调到了=========')
         showDetailFlag.value = !showDetailFlag.value
         const target: HTMLElement = document.querySelector('.text-card')!
         target.style.opacity = showDetailFlag.value ? '1' : '0'
         target.style.zIndex = showDetailFlag.value ? '1' : '-1'
+    }
+    const showSearch = () => {
+        showSideBar.value = true
+    }
+    const getSearchList = (selectedList: Array<string>, bookName: string) => {
+        console.log('selectedList========>', selectedList)
+        console.log('bookName========>', bookName)
     }
     const uploadEpisode = async () => {
         await $fetch('/api/uploadEpisode', { method: 'POST', body: { bookId: route.params.bookId } })
@@ -71,9 +86,11 @@
         router.push(`/works/${book_id}/episodes/${episode_id}`)
     }
     const refreshBook = async () => {
+        loading.value = true
         // 这里不能用await，得promise
         await uploadEpisode()
         await getPageDetail()
+        loading.value = false
     }
     const getPageDetail = async () => {
         const result = await $fetch('/api/getPageDetail', { method: 'POST', body: { bookId: route.params.bookId } })
@@ -119,7 +136,7 @@
         }
     }
     onMounted(async () => {
-        getPageDetail()
+        await getPageDetail()
     })
 </script>
 <!-- <script lang="ts">
@@ -194,5 +211,9 @@ export default {
 } */
 .text-panel{
     height: 50vh
+}
+.seacher-bar{
+    opacity: 0.8;
+    background-color: rgb(186, 206, 211);
 }
 </style>
