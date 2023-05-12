@@ -1,6 +1,6 @@
 <template>
     <TopBanner @showDetail="showDetail" @refreshBook="refreshBook" @showSearch="showSearch" :searchBtn="true" :detailBtn="true" :refreshBtn="true" :multipleCheckBtn="true"></TopBanner>
-    <SearchBar :showSideBar="showSideBar" @getSearchList="getSearchList"></SearchBar>
+    <SearchBar @getSearchList="getSearchList" ref="searchBar"></SearchBar>
     <div class="opacity-div">
         <Card class="back-card right">
             <template #title>{{ bookFullData?.book_title }}</template>
@@ -63,7 +63,7 @@
     const bookFullData = ref<Book>()
     const closable = ref(false)
     const draggable = ref(false)
-    let showSideBar = ref(false)
+    // let showSideBar = ref(false)
     let loading = ref(false)
     const showDetail = () => {
         console.log('调到了=========')
@@ -72,13 +72,18 @@
         target.style.opacity = showDetailFlag.value ? '1' : '0'
         target.style.zIndex = showDetailFlag.value ? '1' : '-1'
     }
+    const searchBar: Ref = ref()
     const showSearch = () => {
-        showSideBar.value = true
+        searchBar.value.showSearch(true)
     }
+    
     const getSearchList = (selectedList: Array<string>, bookName: string) => {
         console.log('selectedList========>', selectedList)
         console.log('bookName========>', bookName)
     }
+    // defineExpose({
+    //     getSearchList
+    // })
     const uploadEpisode = async () => {
         await $fetch('/api/uploadEpisode', { method: 'POST', body: { bookId: route.params.bookId } })
     }
@@ -211,9 +216,5 @@ export default {
 } */
 .text-panel{
     height: 50vh
-}
-.seacher-bar{
-    opacity: 0.8;
-    background-color: rgb(186, 206, 211);
 }
 </style>

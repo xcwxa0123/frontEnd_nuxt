@@ -1,5 +1,6 @@
 <template>
-    <TopBanner :searchBtn="true"></TopBanner>
+    <TopBanner :searchBtn="true" @showSearch="showSearch"></TopBanner>
+    <SearchBar @getSearchList="getSearchList" ref="searchBar"></SearchBar>
     <div class="opacity-div">
         <Card class="back-card">
             <template #content>
@@ -30,6 +31,16 @@
     const router = useRouter()
     const getPageDetail = async (book_id: string) => {
         router.push(`works/${book_id}`)
+    }
+    
+    const searchBar: Ref = ref()
+    const showSearch = () => {
+        searchBar.value.showSearch(true)
+    }
+    
+    const getSearchList = (selectedList: Array<string>, bookName: string) => {
+        console.log('selectedList========>', selectedList)
+        console.log('bookName========>', bookName)
     }
     onMounted(async () => {
         const result = await $fetch('/api/getTitleList', { method: 'POST' })

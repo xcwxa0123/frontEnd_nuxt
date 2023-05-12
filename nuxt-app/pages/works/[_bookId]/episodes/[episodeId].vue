@@ -1,5 +1,6 @@
 <template>
-    <TopBanner :downloadBtn="true" :searchBtn="true" @episodeDownload="episodeDownload"></TopBanner>
+    <TopBanner :downloadBtn="true" :searchBtn="true" @episodeDownload="episodeDownload" @showSearch="showSearch"></TopBanner>
+    <SearchBar @getSearchList="getSearchList" ref="searchBar"></SearchBar>
     <div class="opacity-div">
         <Card class="back-card">
             <template #title>{{ episodeTextData.file_name }}</template>
@@ -23,6 +24,16 @@ import { EpisodeText } from '~~/composables/interfaceSet'
     const episodeTextData = ref<EpisodeText>({} as EpisodeText)
     const router = useRouter()
     const route = useRoute()
+    
+    const searchBar: Ref = ref()
+    const showSearch = () => {
+        searchBar.value.showSearch(true)
+    }
+    
+    const getSearchList = (selectedList: Array<string>, bookName: string) => {
+        console.log('selectedList========>', selectedList)
+        console.log('bookName========>', bookName)
+    }
     const episodeDownload = async () => {
         const result = await $fetch('/api/getEpisodeFile', { method: 'POST', body: { bookId: route.params._bookId, episodeId: route.params.episodeId }, responseType: 'blob' })
         // // 创建链接并下载文件
