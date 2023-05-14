@@ -1,6 +1,6 @@
 <template>
-    <TopBanner @showDetail="showDetail" @refreshBook="refreshBook" @showSearch="showSearch" :searchBtn="true" :detailBtn="true" :refreshBtn="true" :multipleCheckBtn="true"></TopBanner>
-    <SearchBar @getSearchList="getSearchList" ref="searchBar"></SearchBar>
+    <TopBanner @showDetail="showDetail" @refreshBook="refreshBook" @showSearch="showSearch" @setMultipale="setMultipale" :searchBtn="true" :detailBtn="true" :refreshBtn="true" :multipleCheckBtn="true"></TopBanner>
+    <SearchBar ref="searchBar"></SearchBar>
     <div class="opacity-div">
         <Card class="back-card right">
             <template #title>{{ bookFullData?.book_title }}</template>
@@ -50,23 +50,19 @@
             </Card>
         </template>
     </Card>
-    <Dialog v-model:visible="loading" v-model:closable="closable" v-model:draggable="draggable" modal :style="{ width: '10rem' } ">
-        <ProgressSpinner />
-    </Dialog>
+    <LoadingMask :loading="loading"></LoadingMask>
 </template>
 <script setup lang="ts">
     import { Book, EpisodeObj } from '~~/composables/interfaceSet'
+    import { useToast } from "primevue/usetoast";
     const route = useRoute()
     const router = useRouter()
     const showDetailFlag = ref(false)
     const episodeFullData = ref<Array<EpisodeObj>>()
     const bookFullData = ref<Book>()
-    const closable = ref(false)
-    const draggable = ref(false)
-    // let showSideBar = ref(false)
+    const toast = useToast();
     let loading = ref(false)
     const showDetail = () => {
-        console.log('调到了=========')
         showDetailFlag.value = !showDetailFlag.value
         const target: HTMLElement = document.querySelector('.text-card')!
         target.style.opacity = showDetailFlag.value ? '1' : '0'
@@ -76,23 +72,22 @@
     const showSearch = () => {
         searchBar.value.showSearch(true)
     }
-    
-    const getSearchList = (selectedList: Array<string>, bookName: string) => {
-        console.log('selectedList========>', selectedList)
-        console.log('bookName========>', bookName)
-    }
-    // defineExpose({
-    //     getSearchList
-    // })
     const uploadEpisode = async () => {
-        await $fetch('/api/uploadEpisode', { method: 'POST', body: { bookId: route.params.bookId } })
+        const result = await $fetch('/api/uploadEpisode', { method: 'POST', body: { bookId: route.params.bookId } })
+        if(result && result.code === 200){
+            toast.add({ severity: 'success', summary: 'Success', detail: result.data && result.data.msg, life: 3000 });
+        } else {
+            toast.add({ severity: 'info', summary: 'Info', detail: result.msg || 'request fail', life: 3000 });
+        }
+    }
+    const setMultipale = async () => {
+        toast.add({ severity: 'success', summary: 'Success', detail: 'Message Content', life: 3000 });
     }
     const toEpisodeText = (book_id: string, episode_id: string) => {
         router.push(`/works/${book_id}/episodes/${episode_id}`)
     }
     const refreshBook = async () => {
         loading.value = true
-        // 这里不能用await，得promise
         await uploadEpisode()
         await getPageDetail()
         loading.value = false
@@ -130,25 +125,21 @@
                             sub_title: item.sub_title
                         }
                     )
-                    // 把最后一个放进去
-                    if(index == episodeData.length - 1){
-                        episodeList.push(currentEpisodeObj)
-                    }
+                }
+                // 把最后一个放进去
+                if(index == episodeData.length - 1){
+                    episodeList.push(currentEpisodeObj)
                 }
             });
-            console.log('episodeList========>', episodeList)
             episodeFullData.value = episodeList
+        } else {
+            toast.add({ severity: 'info', summary: 'Info', detail: result.msg || 'request fail', life: 3000 });
         }
     }
     onMounted(async () => {
         await getPageDetail()
     })
 </script>
-<!-- <script lang="ts">
-export default {
-    methods: { showDetail }
-}
-</script> -->
 <style>
 .right{
     flex: 1;
@@ -210,10 +201,6 @@ export default {
 .main-card .p-fieldset .p-fieldset-legend{
     text-align: start;
 }
-/* .text-card #pv_id_7_content{
-    height: 50vh;
-    overflow-y: scroll;
-} */
 .text-panel{
     height: 50vh
 }

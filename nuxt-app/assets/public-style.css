@@ -24,6 +24,7 @@ body{ background: var(--bg-ao); }
 .opacity-div{ display: flex; justify-content: center; align-items: center; }
 .back-card{ background-color: var(--bg-haiao); box-shadow: 0.3125rem -0.1875rem 0.1875rem 0.0625rem rgba(0, 0, 0, 0.2), -0.00625rem 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.14), 0 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.12); margin: 1.25rem 3.75rem 1.25rem 3.75rem; }
 .p-tooltip .p-tooltip-text { background: rgba(0, 44, 54, 0.7); padding: 0.4rem 0.75rem 0.45rem 0.75rem; margin: 0.4rem 0; }
+.list-card{ background-color: var(--bg-shiro); box-shadow: 0.3125rem -0.1875rem 0.1875rem 0.0625rem rgba(0, 0, 0, 0.2), -0.00625rem 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.14), 0 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.12); margin: 1.25rem 3.75rem 1.25rem 3.75rem; flex: 1;}
 
 
 .subtitle-box{ display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }

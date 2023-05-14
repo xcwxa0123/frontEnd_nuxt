@@ -5,7 +5,7 @@
         <Card class="back-card">
             <template #content>
                 <template v-for="item in titleList">
-                    <Card class="list-card anime-div" @click="getPageDetail(item.book_id)">
+                    <Card class="list-card anime-div" @click="getPageDetail(item)">
                         <template #title>{{ item.book_title }}</template>
                         <template #subtitle>
                             <div class="subtitle-box">
@@ -22,29 +22,51 @@
             </template>
         </Card>
     </div>
-
+    
+    <LoadingMask :loading="loading"></LoadingMask>
 </template>
 <script setup lang="ts">
+    import { watch } from 'vue'
     import { Book } from '~~/composables/interfaceSet'
     import { useToast } from "primevue/usetoast";
     const toast = useToast();
     // {[key: string]: any}
     const titleList = ref<Array<Book>>()
     const router = useRouter()
-    const getPageDetail = async (book_id: string) => {
-        router.push(`works/${book_id}`)
+    const route = useRoute()
+    let loading = ref(false)
+    watch(route, ()=>{
+        if(titleList.value) {
+            getSearchedList()
+        }
+    })
+    const getPageDetail = async (bookData: Book) => {
+        loading.value = true
+        const result = await $fetch('/api/getSearchedBook', { method: 'POST', body: { bookData: bookData } })
+        if(result && result.code === 200){
+            router.push(`works/${bookData.book_id}`)
+        } else {
+            toast.add({ severity: 'info', summary: 'Info', detail: result.msg || 'request fail', life: 3000 });
+        }
+        loading.value = false
     }
-    
     const searchBar: Ref = ref()
     const showSearch = () => {
         searchBar.value.showSearch(true)
     }
-    onMounted(async () => {
-        const result = await $fetch('/api/getTitleList', { method: 'POST' })
+    const getSearchedList = async () => {
+        loading.value = true
+        const result = await $fetch('/api/getSearchedList', { method: 'POST', body: { searchName: route.query.searchName, pageIndex: route.query.pageIndex } })
         if(result && result.code === 200 && result.data){
             titleList.value = result.data
+            toast.add({ severity: 'success', summary: 'Success', detail: result.msg || 'request success', life: 3000 });
         } else {
             toast.add({ severity: 'info', summary: 'Info', detail: result.msg || 'request fail', life: 3000 });
         }
+        loading.value = false
+
+    }
+    onMounted(async () => {
+        await getSearchedList()
     })
 </script>

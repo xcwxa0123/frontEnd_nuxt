@@ -1,6 +1,6 @@
 <template>
     <TopBanner :downloadBtn="true" :searchBtn="true" @episodeDownload="episodeDownload" @showSearch="showSearch"></TopBanner>
-    <SearchBar @getSearchList="getSearchList" ref="searchBar"></SearchBar>
+    <SearchBar ref="searchBar"></SearchBar>
     <div class="opacity-div">
         <Card class="back-card">
             <template #title>{{ episodeTextData.file_name }}</template>
@@ -19,20 +19,16 @@
     </div>
 </template>
 <script setup lang="ts">
-import { EpisodeText } from '~~/composables/interfaceSet'
+    import { EpisodeText } from '~~/composables/interfaceSet'
+    import { useToast } from "primevue/usetoast";
     // {[key: string]: any}
     const episodeTextData = ref<EpisodeText>({} as EpisodeText)
-    const router = useRouter()
     const route = useRoute()
+    const toast = useToast();
     
     const searchBar: Ref = ref()
     const showSearch = () => {
         searchBar.value.showSearch(true)
-    }
-    
-    const getSearchList = (selectedList: Array<string>, bookName: string) => {
-        console.log('selectedList========>', selectedList)
-        console.log('bookName========>', bookName)
     }
     const episodeDownload = async () => {
         const result = await $fetch('/api/getEpisodeFile', { method: 'POST', body: { bookId: route.params._bookId, episodeId: route.params.episodeId }, responseType: 'blob' })
@@ -46,12 +42,16 @@ import { EpisodeText } from '~~/composables/interfaceSet'
             link.download = `${episodeTextData.value.file_name}.txt`;
             document.body.appendChild(link);
             link.click();
+        } else {
+            toast.add({ severity: 'info', summary: 'Info', detail: 'download fial', life: 3000 });
         }
     }
     onMounted(async () => {
         const result = await $fetch('/api/getEpisodeText', { method: 'POST', body: { bookId: route.params._bookId, episodeId: route.params.episodeId } })
         if(result && result.code === 200 && result.data){
             episodeTextData.value = result.data
+        } else {
+            toast.add({ severity: 'info', summary: 'Info', detail: result.msg || 'request fail', life: 3000 });
         }
     })
 </script>

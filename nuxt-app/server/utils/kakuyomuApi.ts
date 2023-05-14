@@ -29,6 +29,14 @@ class KakuyomuApiClass{
     public async uploadEpisode(book_id: string): Promise<any>{
         return await $fetch(`${process.env.API_BASE_URL}/implapi/episode/updateEpisode`, { method: 'POST', body: JSON.stringify({ bookId: book_id }) })
     }
+    // 获取搜索列表
+    public async getSearchedList(search_name: string, page_index: number): Promise<any>{
+        return await $fetch(`${process.env.API_BASE_URL}/implapi/books/getSearchedList?searchName=${search_name}&pageIndex=${page_index}`, { method: 'GET' })
+    }
+    // 获取搜索列表
+    public async getSearchedBook(book_data: object): Promise<any>{
+        return await $fetch(`${process.env.API_BASE_URL}/implapi/books/getSearchedBook`, { method: 'POST', body: JSON.stringify({ bookData: book_data }) })
+    }
 }
 export default () => {
     return new KakuyomuApiClass()

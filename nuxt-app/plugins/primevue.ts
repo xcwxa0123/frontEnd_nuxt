@@ -17,9 +17,12 @@ import Sidebar from 'primevue/sidebar';
 import InputText from 'primevue/inputtext';
 import Listbox from 'primevue/listbox';
 import MultiSelect from 'primevue/multiselect';
+import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
 
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, { ripple: true });
+    nuxtApp.vueApp.use(ToastService);
     nuxtApp.vueApp.directive('tooltip', Tooltip);
     [
         Card,
@@ -37,7 +40,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         Sidebar,
         InputText,
         Listbox,
-        MultiSelect
+        MultiSelect,
+        Toast
     ].forEach(item => nuxtApp.vueApp.component(item.name, item))
     //other components that you need
 });
