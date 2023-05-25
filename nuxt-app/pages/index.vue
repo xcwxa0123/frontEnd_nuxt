@@ -23,6 +23,7 @@
         </Card>
     </div>
 
+    <LoadingMask :loading="loading"></LoadingMask>
 </template>
 <script setup lang="ts">
     import { Book } from '~~/composables/interfaceSet'
@@ -31,6 +32,7 @@
     // {[key: string]: any}
     const titleList = ref<Array<Book>>()
     const router = useRouter()
+    let loading = ref(false)
     const getPageDetail = async (book_id: string) => {
         router.push(`works/${book_id}`)
     }
@@ -40,11 +42,13 @@
         searchBar.value.showSearch(true)
     }
     onMounted(async () => {
+        loading.value = true
         const result = await $fetch('/api/getTitleList', { method: 'POST' })
         if(result && result.code === 200 && result.data){
             titleList.value = result.data
         } else {
             toast.add({ severity: 'info', summary: 'Info', detail: result.msg || 'request fail', life: 3000 });
         }
+        loading.value = false
     })
 </script>

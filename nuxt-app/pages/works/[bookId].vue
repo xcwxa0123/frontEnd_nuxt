@@ -137,7 +137,9 @@
         }
     }
     onMounted(async () => {
+        loading.value = true
         await getPageDetail()
+        loading.value = false
     })
 </script>
 <style>
@@ -203,5 +205,37 @@
 }
 .text-panel{
     height: 50vh
+}
+@media screen and (max-width: 600px) {
+    .p-card-content .main-card{
+        margin: 0;
+        margin-bottom: 1rem;
+    }
+    .text-content{
+        grid-template-rows: 1fr 1fr;
+    }
+    .text-content span:first-child{
+        grid-column: 1/6;
+        grid-row: 1;
+    }
+    .text-content span:last-child{
+        grid-column: 1/6;
+        font-size: 0.6rem;
+        grid-row: 2;
+    }
+    .right .p-card .p-card-title{
+        font-size: 1.1rem;
+    }
+    .text-div{
+        font-size: 0.9rem;
+    }
+    .text-card{
+        top: 0.5rem;
+        left: 4rem;
+        width: auto;
+    }
+    .text-card .p-card-body{
+        padding: 0.5rem;
+    }
 }
 </style>

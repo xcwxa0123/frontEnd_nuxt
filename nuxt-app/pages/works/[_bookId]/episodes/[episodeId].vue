@@ -17,6 +17,7 @@
             </template>
         </Card>
     </div>
+    <LoadingMask :loading="loading"></LoadingMask>
 </template>
 <script setup lang="ts">
     import { EpisodeText } from '~~/composables/interfaceSet'
@@ -25,12 +26,14 @@
     const episodeTextData = ref<EpisodeText>({} as EpisodeText)
     const route = useRoute()
     const toast = useToast();
+    let loading = ref(false)
     
     const searchBar: Ref = ref()
     const showSearch = () => {
         searchBar.value.showSearch(true)
     }
     const episodeDownload = async () => {
+        loading.value = true
         const result = await $fetch('/api/getEpisodeFile', { method: 'POST', body: { bookId: route.params._bookId, episodeId: route.params.episodeId }, responseType: 'blob' })
         // // 创建链接并下载文件
         if(result instanceof Blob){
@@ -45,14 +48,17 @@
         } else {
             toast.add({ severity: 'info', summary: 'Info', detail: 'download fial', life: 3000 });
         }
+        loading.value = false
     }
     onMounted(async () => {
+        loading.value = true
         const result = await $fetch('/api/getEpisodeText', { method: 'POST', body: { bookId: route.params._bookId, episodeId: route.params.episodeId } })
         if(result && result.code === 200 && result.data){
             episodeTextData.value = result.data
         } else {
             toast.add({ severity: 'info', summary: 'Info', detail: result.msg || 'request fail', life: 3000 });
         }
+        loading.value = false
     })
 </script>
 <style>
@@ -67,5 +73,11 @@
 }
 .back-card .text-content-card {
     margin: auto 3.5rem;
+}
+@media screen and (max-width: 600px) {
+    .back-card .text-content-card{
+        margin: 0;
+        margin-bottom: 1rem;
+    }
 }
 </style>

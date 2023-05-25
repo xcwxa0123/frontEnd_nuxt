@@ -67,6 +67,8 @@
 
     }
     onMounted(async () => {
+        loading.value = true
         await getSearchedList()
+        loading.value = false
     })
 </script>

@@ -1,12 +1,14 @@
 <template>
     <Sidebar v-model:visible="showSideBar" position="top" class="seacher-bar" update:visible>
         <template #header>
-            <span class="p-input-icon-left">
+            <!-- <span class="p-input-icon-left">
                 <i class="pi pi-search" />
-                <InputText v-model="bookName" placeholder="" class="p-inputtext-sm"/>
-            </span>
+                
+            </span> -->
+            <InputText v-model="bookName" placeholder="" class="p-inputtext-sm"/>
             <MultiSelect v-model="selectedSite" :options="siteList" optionLabel="label" optionValue="value"/>
-            <Button label="Submit" @click="submit"/>
+            <!-- <Button label="Submit" @click="submit"/> -->
+            <i class="pi pi-search" @click="submit"/>
         </template>
     </Sidebar>
 </template>
@@ -67,4 +69,19 @@
 div:has(.seacher-bar) ~ .p-multiselect-panel .p-multiselect-items .p-multiselect-item, div:has(.seacher-bar) ~ .p-multiselect-panel .p-multiselect-header{
     padding: 0.3rem 1.5rem!important;
 }
+
+@media screen and (max-width: 600px) {
+    .seacher-bar .p-inputtext.p-inputtext-sm, .seacher-bar .p-multiselect .p-multiselect-label{
+        width: 8rem;
+    }
+    .seacher-bar .p-multiselect{
+        margin: 0 0.5rem;
+        width: 8rem;
+    }
+    .p-sidebar-header-content{
+        line-height: 1.3rem;
+    }
+}
+
+
 </style>

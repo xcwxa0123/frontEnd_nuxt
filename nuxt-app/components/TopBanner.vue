@@ -91,4 +91,13 @@
     from { transform: translateY(0); position: static; }
     to { transform: translateY(-2.9rem); position: relative; }
 }
+
+@media screen and (max-width: 600px) {
+    .icon-bg{
+        padding: 0.2rem 0.5rem;
+    }
+    .pi{
+        font-size: 0.8rem;
+    }
+}
 </style>
