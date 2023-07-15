@@ -15,5 +15,8 @@ export default defineNuxtConfig({
     sourcemap: {
         server: true,
         client: true
-    }
+    },
+    serverHandlers: [
+        { method: '/api/getChatCompletions', handler: '~/server/middleware/textStream.ts' }
+    ]
 })
